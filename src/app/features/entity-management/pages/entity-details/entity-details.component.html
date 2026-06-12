@@ -1,0 +1,124 @@
+<div class="page-container">
+  <ng-container *ngIf="entity() as e; else notFound">
+
+    <!-- Header -->
+    <div class="details-header">
+      <div class="header-left">
+        <a routerLink="/entities" class="back-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          All Entities
+        </a>
+        <h1 class="entity-title">{{ e.name }}</h1>
+        <div class="header-meta">
+          <span class="type-chip">{{ e.type }}</span>
+          <span class="status-badge" [ngClass]="getStatusClass(e.status)">{{ statusLabels[e.status] }}</span>
+          <span class="version-chip">v{{ e.version }}</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a [routerLink]="['/entities', e.id, 'edit']" class="btn-secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit
+        </a>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="info-grid">
+      <div class="info-card">
+        <h3 class="card-title">Overview</h3>
+        <dl class="definition-list">
+          <div class="dl-row">
+            <dt>Description</dt>
+            <dd>{{ e.description || '—' }}</dd>
+          </div>
+          <div class="dl-row">
+            <dt>Primary Key</dt>
+            <dd><code class="code-chip">{{ e.primaryKey }}</code></dd>
+          </div>
+          <div class="dl-row">
+            <dt>Data Owner</dt>
+            <dd>{{ e.dataOwner }}</dd>
+          </div>
+          <div class="dl-row">
+            <dt>Registry ID</dt>
+            <dd>{{ e.dataSourceRegistryId }}</dd>
+          </div>
+          <div class="dl-row">
+            <dt>Compliance</dt>
+            <dd><span class="compliance-chip">{{ complianceLabels[e.complianceTag] }}</span></dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="info-card">
+        <h3 class="card-title">Metadata</h3>
+        <dl class="definition-list">
+          <div class="dl-row">
+            <dt>Entity ID</dt>
+            <dd><code class="code-chip">{{ e.id }}</code></dd>
+          </div>
+          <div class="dl-row">
+            <dt>Version</dt>
+            <dd>{{ e.version }}</dd>
+          </div>
+          <div class="dl-row">
+            <dt>Created</dt>
+            <dd>{{ e.createdAt | date:'medium' }}</dd>
+          </div>
+          <div class="dl-row">
+            <dt>Last Updated</dt>
+            <dd>{{ e.updatedAt | date:'medium' }}</dd>
+          </div>
+          <div class="dl-row">
+            <dt>Attributes</dt>
+            <dd>{{ e.attributes.length }} defined</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Attributes Table -->
+    <div class="section-card">
+      <h3 class="card-title">Attributes ({{ e.attributes.length }})</h3>
+      <table class="data-table" *ngIf="e.attributes.length > 0">
+        <thead>
+          <tr>
+            <th>Attribute Name</th>
+            <th>Data Type</th>
+            <th>Sensitivity</th>
+            <th>Required</th>
+            <th>Primary Key</th>
+            <th>Default Value</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let attr of e.attributes">
+            <td><code class="code-chip">{{ attr.name }}</code></td>
+            <td><span class="type-chip">{{ dataTypeLabels[attr.dataType] }}</span></td>
+            <td><span class="sensitivity-chip">{{ sensitivityLabels[attr.sensitivityClassification] }}</span></td>
+            <td>
+              <span class="bool-chip" [class.yes]="attr.isRequired">{{ attr.isRequired ? 'Yes' : 'No' }}</span>
+            </td>
+            <td>
+              <span class="bool-chip" [class.yes]="attr.isPrimaryKey">{{ attr.isPrimaryKey ? 'Yes' : 'No' }}</span>
+            </td>
+            <td>{{ attr.defaultValue || '—' }}</td>
+            <td class="text-muted">{{ attr.description || '—' }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="empty-attrs" *ngIf="e.attributes.length === 0">No attributes defined.</div>
+    </div>
+
+  </ng-container>
+
+  <ng-template #notFound>
+    <div class="not-found">
+      <h2>Entity Not Found</h2>
+      <p>The entity you are looking for does not exist or has been removed.</p>
+      <a routerLink="/entities" class="btn-primary">Back to Entities</a>
+    </div>
+  </ng-template>
+</div>

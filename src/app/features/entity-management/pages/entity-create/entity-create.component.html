@@ -1,0 +1,151 @@
+<div class="page-container">
+  <div class="form-card">
+    <div class="form-header">
+      <h2>{{ isEdit ? 'Edit Risk Entity' : 'Create Risk Entity' }}</h2>
+      <a routerLink="/entities" class="btn-ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back to List
+      </a>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- Error Banner -->
+      <div class="error-banner" *ngIf="submitError()">
+        {{ submitError() }}
+      </div>
+
+      <!-- Section: Core Details -->
+      <section class="form-section">
+        <h3 class="section-title">Core Details</h3>
+        <div class="form-grid">
+          <div class="field" [class.error]="isInvalid('name')">
+            <label class="label">Entity Name <span class="required">*</span></label>
+            <input type="text" formControlName="name" class="input" placeholder="e.g. Customer Profile" />
+            <span class="field-error" *ngIf="isInvalid('name')">Name is required (min 3 chars)</span>
+          </div>
+
+          <div class="field" [class.error]="isInvalid('type')">
+            <label class="label">Entity Type <span class="required">*</span></label>
+            <input type="text" formControlName="type" class="input" placeholder="e.g. Master Data, Transactional" />
+            <span class="field-error" *ngIf="isInvalid('type')">Type is required</span>
+          </div>
+
+          <div class="field full-width">
+            <label class="label">Description</label>
+            <textarea formControlName="description" class="input textarea" rows="3" placeholder="Describe the purpose and scope of this entity..."></textarea>
+          </div>
+
+          <div class="field" [class.error]="isInvalid('primaryKey')">
+            <label class="label">Primary Key Field <span class="required">*</span></label>
+            <input type="text" formControlName="primaryKey" class="input" placeholder="e.g. customer_id" />
+            <span class="field-error" *ngIf="isInvalid('primaryKey')">Primary key is required</span>
+          </div>
+
+          <div class="field" [class.error]="isInvalid('dataOwner')">
+            <label class="label">Data Owner <span class="required">*</span></label>
+            <input type="text" formControlName="dataOwner" class="input" placeholder="e.g. Alice Johnson" />
+            <span class="field-error" *ngIf="isInvalid('dataOwner')">Data owner is required</span>
+          </div>
+
+          <div class="field" [class.error]="isInvalid('dataSourceRegistryId')">
+            <label class="label">Data Source Registry ID <span class="required">*</span></label>
+            <input type="text" formControlName="dataSourceRegistryId" class="input" placeholder="e.g. DSR-001" />
+            <span class="field-error" *ngIf="isInvalid('dataSourceRegistryId')">Registry ID is required</span>
+          </div>
+
+          <div class="field">
+            <label class="label">Compliance Tag <span class="required">*</span></label>
+            <select formControlName="complianceTag" class="input select">
+              <option *ngFor="let c of complianceOptions" [value]="c">{{ complianceLabels[c] }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="label">Status <span class="required">*</span></label>
+            <select formControlName="status" class="input select">
+              <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Attributes -->
+      <section class="form-section">
+        <div class="section-header-row">
+          <h3 class="section-title">Attributes</h3>
+          <button type="button" class="btn-secondary small" (click)="addAttribute()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Attribute
+          </button>
+        </div>
+
+        <div formArrayName="attributes">
+          <div
+            *ngFor="let attrCtrl of attributesArray.controls; let i = index"
+            [formGroupName]="i"
+            class="attribute-card"
+          >
+            <div class="attr-card-header">
+              <span class="attr-index">Attribute #{{ i + 1 }}</span>
+              <button type="button" class="btn-icon danger" (click)="removeAttribute(i)" title="Remove" *ngIf="attributesArray.length > 1">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+
+            <div class="form-grid attr-grid">
+              <div class="field" [class.error]="isAttrInvalid(i, 'name')">
+                <label class="label">Attribute Name <span class="required">*</span></label>
+                <input type="text" formControlName="name" class="input" placeholder="e.g. customer_id" />
+                <span class="field-error" *ngIf="isAttrInvalid(i, 'name')">Name required</span>
+              </div>
+
+              <div class="field">
+                <label class="label">Data Type <span class="required">*</span></label>
+                <select formControlName="dataType" class="input select">
+                  <option *ngFor="let dt of dataTypeOptions" [value]="dt">{{ dataTypeLabels[dt] }}</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label class="label">Sensitivity <span class="required">*</span></label>
+                <select formControlName="sensitivityClassification" class="input select">
+                  <option *ngFor="let s of sensitivityOptions" [value]="s">{{ sensitivityLabels[s] }}</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label class="label">Default Value</label>
+                <input type="text" formControlName="defaultValue" class="input" placeholder="Optional" />
+              </div>
+
+              <div class="field full-width">
+                <label class="label">Description</label>
+                <input type="text" formControlName="description" class="input" placeholder="Brief description of this attribute" />
+              </div>
+
+              <div class="field checkboxes">
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="isRequired" />
+                  Required
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="isPrimaryKey" />
+                  Primary Key
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Submit -->
+      <div class="form-actions">
+        <a routerLink="/entities" class="btn-ghost">Cancel</a>
+        <button type="submit" class="btn-primary">
+          {{ isEdit ? 'Save Changes' : 'Create Entity' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
