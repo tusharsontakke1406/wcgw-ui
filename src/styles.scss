@@ -1,0 +1,79 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #f1f5f9;
+  color: #1e293b;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* Shared buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: .55rem 1.1rem;
+  font-size: .875rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .15s;
+
+  svg { width: 15px; height: 15px; }
+  &:hover { background: #1d4ed8; }
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  background: #fff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  padding: .5rem 1rem;
+  font-size: .875rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .15s;
+
+  svg { width: 15px; height: 15px; }
+  &:hover { background: #f9fafb; }
+  &.small { padding: .35rem .75rem; font-size: .8rem; }
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  color: #64748b;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  padding: .45rem .75rem;
+  font-size: .875rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .15s, color .15s;
+
+  svg { width: 14px; height: 14px; }
+  &:hover { background: #f1f5f9; color: #374151; }
+}
+
+.page-container {
+  padding: 1.75rem 2rem;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
