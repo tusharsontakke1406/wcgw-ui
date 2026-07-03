@@ -1,0 +1,26 @@
+<div class="dashboard-container">
+  <div class="kpi-row">
+    <app-kpi-card title="Total Risks" [value]="(kpi$ | async)?.totalRisks" color="primary"></app-kpi-card>
+    <app-kpi-card title="High" [value]="(kpi$ | async)?.high" color="danger"></app-kpi-card>
+    <app-kpi-card title="Medium" [value]="(kpi$ | async)?.medium" color="warning"></app-kpi-card>
+    <app-kpi-card title="Low" [value]="(kpi$ | async)?.low" color="success"></app-kpi-card>
+  </div>
+  <div class="trend-chart">
+    <app-echarts-wrapper [data]="(kpi$ | async)?.trend"></app-echarts-wrapper>
+  </div>
+  <div class="engagement-feed">
+    <h3>Prioritized Engagement Feed</h3>
+    <ul>
+      <li *ngFor="let item of (engagementFeed$ | async)" (click)="selectFeedItem(item)">
+        <span class="priority" [ngClass]="item.priority">{{ item.priority }}</span>
+        <span class="entity">{{ item.entityName }}</span>
+        <span class="score">{{ item.riskScore }}</span>
+        <span class="summary">{{ item.summary }}</span>
+      </li>
+    </ul>
+    <div *ngIf="selectedFeedItem()">
+      <h4>Details for {{ selectedFeedItem()?.entityName }}</h4>
+      <p>{{ selectedFeedItem()?.summary }}</p>
+    </div>
+  </div>
+</div>
